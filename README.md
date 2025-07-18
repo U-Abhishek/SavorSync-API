@@ -67,20 +67,6 @@ fastapi dev app/main.py
 - The API will be available at: `http://localhost:8000`
 - Interactive docs: `http://localhost:8000/docs`
 
----
-
-## Populating the Database (Optional)
-
-To auto-generate and populate recipes for various cuisines, run:
-
-```bash
-python populate_database.py
-```
-
-This script uses the `/generation/recipe` endpoint and requires `ADMIN_API_KEY` in your `.env`.
-
----
-
 ## API Usage
 
 ### Public Endpoints
