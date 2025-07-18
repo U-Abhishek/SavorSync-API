@@ -18,6 +18,7 @@ class RecipeGenerationRequest(BaseModel):
 
 class RecipeSchema(BaseModel):
     """Schema for a recipe."""
+    id: str = Field(..., description="Unique identifier for the recipe")
     recipe_name: str = Field(..., description="Name of the recipe")
     cuisine: str = Field(..., description="Cuisine type")
     ingredients: List[str] = Field(..., description="List of ingredients")
@@ -28,6 +29,7 @@ class RecipeSchema(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
+                "id": "507f1f77bcf86cd799439011",
                 "recipe_name": "Spaghetti Carbonara",
                 "cuisine": "Italian",
                 "ingredients": ["spaghetti", "eggs", "pancetta", "parmesan cheese", "black pepper"],

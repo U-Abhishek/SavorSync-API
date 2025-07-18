@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavorSync Recipe Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .content {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .cuisine-section {
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .cuisine-header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recipe-count {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .recipe-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .recipe-id {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .recipe-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .stat-icon {
+            font-size: 1.1em;
+        }
+
+        .view-details {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .view-details:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .recipe-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ingredients-list, .instructions-list, .fun-facts-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .ingredients-list li, .instructions-list li, .fun-facts-list li {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .substitutions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .substitution-item {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #dc3545;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ SavorSync Recipe Visualizer</h1>
+            <p>Explore your recipe collection by cuisine</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="loadAllRecipes()">📋 View All Recipes</button>
+            <button class="btn btn-success" onclick="showStatistics()">📊 Show Statistics</button>
+            <div class="input-group">
+                <input type="text" id="recipeIdInput" placeholder="Enter Recipe ID">
+                <button class="btn btn-secondary" onclick="viewRecipeDetails()">🔍 View Recipe</button>
+            </div>
+        </div>
+
+        <div class="content" id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Click "View All Recipes" to start exploring!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Details Modal -->
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Recipe Details</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Recipe details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        // Note: /recipes endpoints don't require authentication
+        // Admin API key is only needed for generation endpoints
+
+        async function fetchRecipes() {
+            try {
+                console.log('Fetching recipes from:', `${API_BASE_URL}/recipes`);
+                const response = await fetch(`${API_BASE_URL}/recipes`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Response error text:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Fetched recipes:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching recipes:', error);
+                showError(`Failed to fetch recipes: ${error.message}`);
+                return [];
+            }
+        }
+
+        async function fetchRecipeDetails(recipeId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/recipes/${recipeId}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching recipe details:', error);
+                showError('Failed to fetch recipe details.');
+                return null;
+            }
+        }
+
+        function groupRecipesByCuisine(recipes) {
+            const grouped = {};
+            recipes.forEach(recipe => {
+                const cuisine = recipe.cuisine || 'Unknown';
+                if (!grouped[cuisine]) {
+                    grouped[cuisine] = [];
+                }
+                grouped[cuisine].push(recipe);
+            });
+            return grouped;
+        }
+
+        function showLoading() {
+            document.getElementById('content').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading recipes...</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+        }
+
+        async function loadAllRecipes() {
+            showLoading();
+            const recipes = await fetchRecipes();
+            
+            if (recipes.length === 0) {
+                showError('No recipes found in the database.');
+                return;
+            }
+
+            const groupedRecipes = groupRecipesByCuisine(recipes);
+            displayRecipesByCuisine(groupedRecipes);
+        }
+
+        function displayRecipesByCuisine(groupedRecipes) {
+            let html = '';
+            
+            Object.keys(groupedRecipes).sort().forEach(cuisine => {
+                const recipes = groupedRecipes[cuisine];
+                html += `
+                    <div class="cuisine-section">
+                        <div class="cuisine-header">
+                            <span>🌍 ${cuisine.toUpperCase()} CUISINE</span>
+                            <span class="recipe-count">${recipes.length} recipes</span>
+                        </div>
+                        <div class="recipes-grid">
+                            ${recipes.map(recipe => createRecipeCard(recipe)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('content').innerHTML = html;
+        }
+
+        function createRecipeCard(recipe) {
+            const ingredientsCount = recipe.ingredients ? recipe.ingredients.length : 0;
+            const instructionsCount = recipe.instructions ? recipe.instructions.length : 0;
+            const funFactsCount = recipe.fun_facts ? recipe.fun_facts.length : 0;
+            const substitutionsCount = recipe.substitutions ? Object.keys(recipe.substitutions).length : 0;
+
+            return `
+                <div class="recipe-card" onclick="viewRecipeModal('${recipe.id}')">
+                    <div class="recipe-title">${recipe.recipe_name}</div>
+                    <div class="recipe-id">ID: ${recipe.id}</div>
+                    <div class="recipe-stats">
+                        <div class="stat">
+                            <span class="stat-icon">🥘</span>
+                            <span>${ingredientsCount} ingredients</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">📋</span>
+                            <span>${instructionsCount} steps</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">💡</span>
+                            <span>${funFactsCount} fun facts</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">🔄</span>
+                            <span>${substitutionsCount} substitutions</span>
+                        </div>
+                    </div>
+                    <a href="#" class="view-details" onclick="event.stopPropagation(); viewRecipeModal('${recipe.id}')">
+                        View Details
+                    </a>
+                </div>
+            `;
+        }
+
+        async function showStatistics() {
+            showLoading();
+            const recipes = await fetchRecipes();
+            
+            if (recipes.length === 0) {
+                showError('No recipes found for statistics.');
+                return;
+            }
+
+            const groupedRecipes = groupRecipesByCuisine(recipes);
+            const totalIngredients = recipes.reduce((sum, recipe) => sum + (recipe.ingredients ? recipe.ingredients.length : 0), 0);
+            const totalInstructions = recipes.reduce((sum, recipe) => sum + (recipe.instructions ? recipe.instructions.length : 0), 0);
+
+            let html = `
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number">${recipes.length}</div>
+                        <div class="stat-label">Total Recipes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${Object.keys(groupedRecipes).length}</div>
+                        <div class="stat-label">Cuisines</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${(totalIngredients / recipes.length).toFixed(1)}</div>
+                        <div class="stat-label">Avg Ingredients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${(totalInstructions / recipes.length).toFixed(1)}</div>
+                        <div class="stat-label">Avg Instructions</div>
+                    </div>
+                </div>
+                <div class="cuisine-section">
+                    <div class="cuisine-header">
+                        <span>📈 RECIPES PER CUISINE</span>
+                    </div>
+                    <div class="recipes-grid">
+            `;
+
+            Object.keys(groupedRecipes).sort().forEach(cuisine => {
+                const count = groupedRecipes[cuisine].length;
+                html += `
+                    <div class="recipe-card">
+                        <div class="recipe-title">${cuisine}</div>
+                        <div class="stat-number" style="color: #667eea; margin: 10px 0;">${count}</div>
+                        <div class="stat-label">recipes</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = html;
+        }
+
+        async function viewRecipeDetails() {
+            const recipeId = document.getElementById('recipeIdInput').value.trim();
+            if (!recipeId || recipeId === 'undefined') {
+                alert('Please enter a valid recipe ID');
+                return;
+            }
+            await viewRecipeModal(recipeId);
+        }
+
+        async function viewRecipeModal(recipeId) {
+            if (!recipeId || recipeId === 'undefined') {
+                alert('Invalid recipe ID');
+                return;
+            }
+            
+            const recipe = await fetchRecipeDetails(recipeId);
+            if (!recipe) {
+                alert('Recipe not found');
+                return;
+            }
+
+            document.getElementById('modalTitle').textContent = `${recipe.recipe_name} (${recipe.cuisine} Cuisine)`;
+            
+            let modalBody = '';
+
+            // Ingredients
+            if (recipe.ingredients && recipe.ingredients.length > 0) {
+                modalBody += `
+                    <div class="recipe-section">
+                        <div class="section-title">🥘 INGREDIENTS</div>
+                        <ul class="ingredients-list">
+                            ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Substitutions
+            if (recipe.substitutions && Object.keys(recipe.substitutions).length > 0) {
+                const validSubstitutions = Object.entries(recipe.substitutions)
+                    .filter(([_, substitute]) => substitute && substitute.toLowerCase() !== 'none');
+                
+                if (validSubstitutions.length > 0) {
+                    modalBody += `
+                        <div class="recipe-section">
+                            <div class="section-title">🔄 SUBSTITUTIONS</div>
+                            <div class="substitutions-list">
+                                ${validSubstitutions.map(([original, substitute]) => 
+                                    `<div class="substitution-item"><strong>${original}</strong> → ${substitute}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Instructions
+            if (recipe.instructions && recipe.instructions.length > 0) {
+                modalBody += `
+                    <div class="recipe-section">
+                        <div class="section-title">📋 INSTRUCTIONS</div>
+                        <ol class="instructions-list">
+                            ${recipe.instructions.map(instruction => `<li>${instruction}</li>`).join('')}
+                        </ol>
+                    </div>
+                `;
+            }
+
+            // Fun Facts
+            if (recipe.fun_facts && recipe.fun_facts.length > 0) {
+                modalBody += `
+                    <div class="recipe-section">
+                        <div class="section-title">💡 FUN FACTS</div>
+                        <ul class="fun-facts-list">
+                            ${recipe.fun_facts.map(fact => `<li>${fact}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Summary
+            if (recipe.summary) {
+                modalBody += `
+                    <div class="recipe-section">
+                        <div class="section-title">📝 SUMMARY</div>
+                        <p style="padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #667eea;">
+                            ${recipe.summary}
+                        </p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modalBody').innerHTML = modalBody;
+            document.getElementById('recipeModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('recipeModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('recipeModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html> 
