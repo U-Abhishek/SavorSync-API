@@ -10,11 +10,10 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/generation", tags=["Recipe Generation"])
 
-collection = db["recipes"]
+collection = db["new_recipes"]
 
-# Helper to convert MongoDB document to dict with string id
+# Helper to convert MongoDB document to dict
 def recipe_helper(recipe) -> dict:
-    recipe["id"] = str(recipe["_id"])
     del recipe["_id"]
     return recipe
 
@@ -40,10 +39,12 @@ async def generate_new_recipe(
         recipe_data = {
             "recipe_name": generated_recipe.get("title", request.recipe_name),
             "cuisine": request.cuisine,
+            "region": generated_recipe.get("region", "Unknown"),
             "ingredients": generated_recipe.get("ingredients", []),
             "substitutions": generated_recipe.get("substitutions", {}),
             "instructions": generated_recipe.get("instructions", []),
-            "fun_facts": generated_recipe.get("fun_facts", [])
+            "fun_facts": generated_recipe.get("fun_facts", []),
+            "cultural_insights": generated_recipe.get("cultural_insights", "")
         }
 
         # Validate with Pydantic before saving or returning

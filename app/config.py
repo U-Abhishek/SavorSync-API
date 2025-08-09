@@ -13,3 +13,4 @@ class Config:
     LANGSMITH_PROJECT = os.environ.get("LANGSMITH_PROJECT", "savor-sync-recipe-generation")
     # Add other configuration variables here as needed, e.g.:
     # API_KEY = os.environ.get("API_KEY")
+    GOOGLE_API = os.environ.get("GOOGLE_API") 

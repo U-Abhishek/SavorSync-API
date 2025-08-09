@@ -6,11 +6,10 @@ from bson.objectid import ObjectId
 
 router = APIRouter(prefix="/recipes", tags=["Recipes"])
 
-collection = db["recipes"]
+collection = db["new_recipes"]
 
-# Helper to convert MongoDB document to dict with string id
+# Helper to convert MongoDB document to dict
 def recipe_helper(recipe) -> dict:
-    recipe["id"] = str(recipe["_id"])
     del recipe["_id"]
     return recipe
 

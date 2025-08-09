@@ -1,6 +1,7 @@
 # Environment variables are loaded from .env and used in database.py for MongoDB connection
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from app.database import client
 from app.routers.recipes import router as recipes_router
 from app.routers.admin import router as admin_router
@@ -20,5 +21,6 @@ app.add_middleware(
 app.include_router(recipes_router)
 app.include_router(admin_router)
 app.include_router(generation_router)
+
 
 

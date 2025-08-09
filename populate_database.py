@@ -16,19 +16,17 @@ ADMIN_API_KEY = os.environ.get("ADMIN_API_KEY")
 if not ADMIN_API_KEY:
     raise ValueError("ADMIN_API_KEY environment variable is not set. Please set it in your .env file.")
 
-# Cuisines and their recipes
+# Cuisines and their recipes - 35 Global Cuisines (Popular dishes only)
 CUISINES_AND_RECIPES = {
-    "Italian": [
-        "Spaghetti Carbonara",
-        "Margherita Pizza",
-        "Risotto alla Milanese",
-        "Osso Buco",
-        "Tiramisu",
-        "Pasta alla Norma",
-        "Bruschetta",
-        "Minestrone Soup",
-        "Gnocchi with Pesto",
-        "Panna Cotta"
+    # ASIA (12 cuisines) - 85 recipes
+    "Chinese": [
+        "Kung Pao Chicken",
+        "Sweet and Sour Pork",
+        "Peking Duck",
+        "Fried Rice",
+        "Dim Sum",
+        "Hot and Sour Soup",
+        "Mapo Tofu"
     ],
     "Indian": [
         "Chicken Tikka Masala",
@@ -38,57 +36,15 @@ CUISINES_AND_RECIPES = {
         "Tandoori Chicken",
         "Dal Makhani",
         "Naan Bread",
-        "Gulab Jamun",
-        "Rogan Josh",
-        "Kheer"
-    ],
-    "Chinese": [
-        "Kung Pao Chicken",
-        "Sweet and Sour Pork",
-        "Mapo Tofu",
-        "Peking Duck",
-        "Dim Sum",
-        "Hot and Sour Soup",
-        "General Tso's Chicken",
-        "Wonton Soup",
-        "Fried Rice",
-        "Egg Drop Soup"
-    ],
-    "Mexican": [
-        "Tacos al Pastor",
-        "Guacamole",
-        "Chiles Rellenos",
-        "Mole Poblano",
-        "Ceviche",
-        "Tamales",
-        "Pozole",
-        "Churros",
-        "Enchiladas",
-        "Horchata"
+        "Gulab Jamun"
     ],
     "Japanese": [
-        "Sushi Roll",
+        "Sushi",
         "Ramen",
         "Tempura",
         "Teriyaki Chicken",
         "Miso Soup",
-        "Tonkatsu",
-        "Gyoza",
-        "Okonomiyaki",
-        "Matcha Green Tea",
-        "Takoyaki"
-    ],
-    "French": [
-        "Coq au Vin",
-        "Beef Bourguignon",
-        "Ratatouille",
-        "Quiche Lorraine",
-        "French Onion Soup",
-        "Crème Brûlée",
-        "Croissants",
-        "Bouillabaisse",
-        "Tarte Tatin",
-        "Escargot"
+        "Tonkatsu"
     ],
     "Thai": [
         "Pad Thai",
@@ -96,48 +52,150 @@ CUISINES_AND_RECIPES = {
         "Tom Yum Soup",
         "Massaman Curry",
         "Som Tam",
-        "Pad See Ew",
-        "Mango Sticky Rice",
-        "Thai Basil Chicken",
-        "Larb",
-        "Tom Kha Gai"
+        "Mango Sticky Rice"
     ],
-    "Greek": [
-        "Moussaka",
-        "Souvlaki",
-        "Greek Salad",
-        "Spanakopita",
-        "Pastitsio",
-        "Dolmades",
-        "Baklava",
-        "Avgolemono Soup",
-        "Gyros",
-        "Galaktoboureko"
+    "Korean": [
+        "Bibimbap",
+        "Kimchi",
+        "Bulgogi",
+        "Korean Fried Chicken",
+        "Tteokbokki"
+    ],
+    "Vietnamese": [
+        "Pho",
+        "Banh Mi",
+        "Spring Rolls",
+        "Bun Cha"
+    ],
+    "Indonesian": [
+        "Nasi Goreng",
+        "Rendang",
+        "Satay",
+        "Gado-Gado"
+    ],
+    "Filipino": [
+        "Adobo",
+        "Lumpia",
+        "Lechon",
+        "Sinigang"
+    ],
+    "Malaysian": [
+        "Nasi Lemak",
+        "Laksa",
+        "Char Kway Teow",
+        "Roti Canai"
+    ],
+    "Pakistani": [
+        "Biryani",
+        "Karahi",
+        "Seekh Kebab"
+    ],
+    "Singaporean": [
+        "Hainanese Chicken Rice",
+        "Chili Crab",
+        "Laksa"
+    ],
+    "Sri Lankan": [
+        "Rice and Curry",
+        "Kottu Roti",
+        "Hoppers"
+    ],
+
+    # EUROPE (8 cuisines) - 65 recipes
+    "Italian": [
+        "Spaghetti Carbonara",
+        "Margherita Pizza",
+        "Risotto",
+        "Tiramisu",
+        "Lasagna",
+        "Bruschetta",
+        "Gnocchi",
+        "Panna Cotta"
+    ],
+    "French": [
+        "Coq au Vin",
+        "Beef Bourguignon",
+        "Ratatouille",
+        "Croissants",
+        "French Onion Soup",
+        "Crème Brûlée",
+        "Escargot"
     ],
     "Spanish": [
         "Paella",
         "Gazpacho",
         "Tortilla Española",
-        "Patatas Bravas",
-        "Churros con Chocolate",
         "Jamón Ibérico",
-        "Pulpo a la Gallega",
-        "Crema Catalana",
-        "Empanadas",
-        "Sangria"
+        "Churros",
+        "Patatas Bravas"
     ],
-    "Korean": [
-        "Bibimbap",
-        "Kimchi Jjigae",
-        "Bulgogi",
-        "Japchae",
-        "Samgyeopsal",
-        "Tteokbokki",
-        "Korean Fried Chicken",
-        "Sundubu Jjigae",
-        "Hotteok",
-        "Bingsu"
+    "Greek": [
+        "Moussaka",
+        "Greek Salad",
+        "Souvlaki",
+        "Gyros",
+        "Baklava",
+        "Spanakopita"
     ],
+    "German": [
+        "Schnitzel",
+        "Bratwurst",
+        "Sauerkraut",
+        "Pretzels",
+        "Black Forest Cake"
+    ],
+    "Portuguese": [
+        "Pastéis de Nata",
+        "Bacalhau",
+        "Francesinha",
+        "Caldo Verde"
+    ],
+    "Russian": [
+        "Borscht",
+        "Beef Stroganoff",
+        "Pelmeni",
+        "Blini"
+    ],
+    "British": [
+        "Fish and Chips",
+        "Shepherd's Pie",
+        "Full English Breakfast",
+        "Scones with Clotted Cream"
+    ],
+
+    # NORTH AMERICA (4 cuisines) - 32 recipes
+    "American": [
+        "BBQ Ribs",
+        "Hamburger",
+        "Mac and Cheese",
+        "Fried Chicken",
+        "Apple Pie",
+        "Buffalo Wings",
+        "Pancakes",
+        "Cheesecake"
+    ],
+    "Mexican": [
+        "Tacos",
+        "Guacamole",
+        "Burritos",
+        "Quesadillas",
+        "Mole",
+        "Enchiladas",
+        "Churros"
+    ],
+    "Canadian": [
+        "Poutine",
+        "Tourtière",
+        "Butter Tarts",
+        "Maple Syrup Pancakes"
+    ],
+    "Guatemalan": [
+        "Pepian",
+        "Tamales",
+        "Kak'ik"
+    ],
+
+    # MIDDLE EAST (4 cuisines) - 28 recipes
     "Lebanese": [
         "Hummus",
         "Falafel",
@@ -145,22 +203,96 @@ CUISINES_AND_RECIPES = {
         "Tabbouleh",
         "Baba Ganoush",
         "Kibbeh",
-        "Fattoush Salad",
-        "Manaeesh",
-        "Kunafa",
-        "Labneh"
+        "Manaeesh"
     ],
-    "Vietnamese": [
-        "Pho",
-        "Banh Mi",
-        "Spring Rolls",
-        "Bun Cha",
-        "Cao Lau",
-        "Banh Xeo",
-        "Com Tam",
-        "Che",
-        "Bun Bo Hue",
-        "Goi Cuon"
+    "Turkish": [
+        "Kebab",
+        "Baklava",
+        "Turkish Delight",
+        "Dolma",
+        "Turkish Coffee",
+        "Börek"
+    ],
+    "Iranian": [
+        "Ghormeh Sabzi",
+        "Kebab Koobideh",
+        "Tahdig",
+        "Fesenjan"
+    ],
+    "Israeli": [
+        "Falafel",
+        "Hummus",
+        "Shakshuka",
+        "Sabich"
+    ],
+
+    # SOUTH AMERICA (3 cuisines) - 21 recipes
+    "Brazilian": [
+        "Feijoada",
+        "Churrasco",
+        "Açaí Bowl",
+        "Coxinha",
+        "Brigadeiro",
+        "Caipirinha",
+        "Moqueca"
+    ],
+    "Peruvian": [
+        "Ceviche",
+        "Lomo Saltado",
+        "Aji de Gallina",
+        "Anticuchos",
+        "Pisco Sour"
+    ],
+    "Argentine": [
+        "Asado",
+        "Empanadas",
+        "Milanesa",
+        "Chimichurri",
+        "Dulce de Leche"
+    ],
+
+    # CARIBBEAN (2 cuisines) - 12 recipes
+    "Jamaican": [
+        "Jerk Chicken",
+        "Ackee and Saltfish",
+        "Curry Goat",
+        "Rice and Peas",
+        "Patties",
+        "Rum Punch"
+    ],
+    "Cuban": [
+        "Ropa Vieja",
+        "Cuban Sandwich",
+        "Mojo Pork",
+        "Black Beans and Rice",
+        "Mojito",
+        "Flan"
+    ],
+
+    # AFRICA (2 cuisines) - 12 recipes
+    "Moroccan": [
+        "Tagine",
+        "Couscous",
+        "Pastilla",
+        "Harira",
+        "Mint Tea"
+    ],
+    "Ethiopian": [
+        "Injera",
+        "Doro Wat",
+        "Kitfo",
+        "Shiro",
+        "Ethiopian Coffee",
+        "Berbere Spice"
+    ],
+
+    # OCEANIA (1 cuisine) - 5 recipes
+    "Australian": [
+        "Meat Pie",
+        "Lamington",
+        "Pavlova",
+        "Flat White Coffee",
+        "Tim Tam"
     ]
 }
 
@@ -251,10 +383,10 @@ def generate_single_recipe(recipe_name: str, cuisine: str):
         cuisine: Cuisine type
     """
     print(f"Generating single recipe: {recipe_name} ({cuisine})")
-    result = generate_recipe(recipe_name, cuisine, save_to_db=False)
+    result = generate_recipe(recipe_name, cuisine, save_to_db=True)
     
     if result:
-        print("Generated recipe:")
+        print("Generated recipe and saved to database:")
         print(json.dumps(result, indent=2))
     else:
         print("Failed to generate recipe")
@@ -265,7 +397,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == "test":
             # Test with a single recipe
-            generate_single_recipe("Chicken Tikka Masala", "Indian")
+            generate_single_recipe("Kung Pao Chicken", "Chinese")
         elif sys.argv[1] == "populate":
             # Populate the entire database
             populate_database()
